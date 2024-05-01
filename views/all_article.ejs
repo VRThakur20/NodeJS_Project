@@ -1,0 +1,79 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Read Articles</title>
+    <link
+      rel="stylesheet"
+      href="https://cdn.jsdelivr.net/npm/bootstrap@4.3.1/dist/css/bootstrap.min.css"
+      integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T"
+      crossorigin="anonymous"
+    />
+  </head>
+  <body style="font-family: monospace; background-color: rgb(176, 168, 168);">
+    <%- include('navbar') %>
+    <ul type="none">
+      <% articles.forEach(function(article) { %>
+      <li>
+        <div class="container">
+          <div class="row">
+            <div class="col">
+              <h3><%= article.name %></h3>
+              <h4><%= article.title %></h4>
+              <p><%= article.content %></p>
+            </div>
+            <div class="col">
+              <button class="delete-article-btn btn btn-outline-danger" data-article-id="<%= article._id %>">Delete</button>
+        </li>
+            </div>
+          </div>
+        </div>
+      </li>
+      <% }); %>
+    </ul>
+
+    <script>
+      document.querySelectorAll('.delete-article-btn').forEach(button => {
+        button.addEventListener('click', () => {
+            const articleId = button.dataset.articleId;
+            deleteArticle(articleId);
+        });
+    });
+
+    // Function to send DELETE request to server
+    function deleteArticle(articleId) {
+        fetch(`/articles/${articleId}`, {
+            method: 'DELETE'
+        })
+        .then(response => {
+            if (!response.ok) {
+                throw new Error('Network response was not ok');
+            }
+            // Reload the page after successful deletion
+            location.reload();
+        })
+        .catch(error => {
+            console.error('Error deleting article:', error);
+            alert('An error occurred while deleting the article');
+        });
+    }
+    </script>
+
+    <script
+      src="https://code.jquery.com/jquery-3.3.1.slim.min.js"
+      integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo"
+      crossorigin="anonymous"
+    ></script>
+    <script
+      src="https://cdn.jsdelivr.net/npm/popper.js@1.14.7/dist/umd/popper.min.js"
+      integrity="sha384-UO2eT0CpHqdSJQ6hJty5KVphtPhzWj9WO1clHTMGa3JDZwrnQq4sF86dIHNDz0W1"
+      crossorigin="anonymous"
+    ></script>
+    <script
+      src="https://cdn.jsdelivr.net/npm/bootstrap@4.3.1/dist/js/bootstrap.min.js"
+      integrity="sha384-JjSmVgyd0p3pXB1rRibZUAYoIIy6OrQ6VrjIEaFf/nJGzIxFDsf4x0xIM+B07jRM"
+      crossorigin="anonymous"
+    ></script>
+  </body>
+</html>
